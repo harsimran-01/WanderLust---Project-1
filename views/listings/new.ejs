@@ -1,0 +1,41 @@
+<% layout("layouts/boilerplate") %>
+
+    <div class="form-container">
+        <h2>Create New Listing ✨</h2>
+
+        <!-- //enctype="multipart/form-data"  -> to allow users to upload the files-->
+        <form action="/listings" method="POST" class="needs-validation" novalidate enctype="multipart/form-data">
+
+            <label class="form-label">Title</label>
+            <input type="text" class="form-control" name="listing[title]" required>
+            <div class="invalid-feedback">Title is required</div>
+
+            <label class="form-label">Description</label>
+            <textarea class="form-control" name="listing[description]"></textarea>
+
+            <label class="form-label">Price (₹)</label>
+            <input type="number" class="form-control" name="listing[price]" required>
+            <div class="invalid-feedback">Please enter a valid price</div>
+
+            <label class="form-label">Location</label>
+            <input type="text" class="form-control" name="listing[location]" required>
+            <div class="invalid-feedback">Location is required</div>
+
+            <label class="form-label">Country</label>
+            <input type="text" class="form-control" name="listing[country]" required>
+            <div class="invalid-feedback">Country is required</div>
+
+            <!-- <label class="form-label">Image URL</label>
+            <input type="url" class="form-control" name="listing[image][url]">
+            <div class="invalid-feedback">Enter a valid URL</div> -->
+
+            <!-- //for uploading the files -->
+            <label class="form-label">Upload Image</label>
+            <input type="file" class="form-control" name="listing[image][url]" required>
+            <!-- <div class="invalid-feedback">Enter a valid URL</div> -->
+
+            <button class="btn btn-primary mt-3" type="submit">+ Create Listing</button>
+        </form>
+
+        <a href="/listings" class="back-btn">⬅ Back to Listings</a>
+    </div>

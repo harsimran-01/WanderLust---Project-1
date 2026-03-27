@@ -1,0 +1,174 @@
+<% layout("layouts/boilerplate") %>
+
+<div class="show-container">
+
+    <h2><%= listings.title %></h2>
+
+    <img src="<%= listings.image.url %>" alt="listing image" class="listing-img">
+
+    <div class="content">
+        <p class="owner">
+            Posted by 
+            <span class="username">
+                <%= listings.owner.username %>
+            </span>
+        </p>
+
+        <p class="description">
+            <%= listings.description %>
+        </p>
+    </div>
+
+    <div class="info">
+        <p class="price">
+            ₹ <%= listings.price.toLocaleString("en-IN") %>
+        </p>
+        
+
+        <p class="location">
+            📍 <%= listings.location %>, <%= listings.country %>
+        </p>
+    </div>
+
+    <!-- ✏️ EDIT & DELETE LISTING -->
+    <% if(currUser && currUser._id.equals(listings.owner._id)){ %>
+        <div class="actions">
+            <a href="/listings/<%= listings._id %>/edit" class="btn edit-btn">✏️ Edit</a>
+
+            <form action="/listings/<%= listings._id %>?_method=DELETE" method="POST">
+                <button class="btn delete-btn">🗑 Delete</button>
+            </form>
+        </div>
+    <% } %>
+
+
+    <!-- ⭐ REVIEWS SECTION -->
+    <h2>All Reviews</h2>
+
+    <% if (listings.reviews && listings.reviews.length > 0) { %>
+
+        <div class="reviews-grid">
+
+            <% listings.reviews.forEach((review) => { %>
+
+                <div class="review-card">
+
+                    <p class="review-owner">
+                        Reviewed by 
+                        <span class="username">
+                            <%= review.author.username %>
+                        </span>
+                    </p>
+
+                    <!-- ⭐ Dynamic Stars -->
+                    <p>
+                        <% for(let i = 0; i < review.rating; i++){ %>
+                            ⭐
+                        <% } %>
+                        (<%= review.rating %>/5)
+                    </p>
+
+                    <!-- 💬 Comment -->
+                    <p class="review-comment">
+                        <%= review.comment %>
+                    </p>
+
+                    <!-- 🗑 DELETE (ONLY AUTHOR) -->
+                    <% if(currUser && currUser._id.equals(review.author._id)){ %>
+                        <form action="/listings/<%= listings._id %>/reviews/<%= review._id %>?_method=DELETE" method="POST">
+                            <button class="delete-review-btn">
+                                <i class="fa-solid fa-trash"></i>
+                            </button>
+                        </form>
+                    <% } %>
+
+                </div>
+
+            <% }) %>
+
+        </div>
+
+    <% } else { %>
+
+        <div class="no-reviews">
+            <h4>😶 No Reviews Yet</h4>
+            <p>Be the first to share your experience!</p>
+        </div>
+
+    <% } %>
+
+
+    <!-- ➕ ADD REVIEW FORM -->
+    <% if(currUser){ %>
+
+        <div class="review-form">
+            <h4>Add Your Review</h4>
+
+            <form action="/listings/<%= listings._id %>/reviews" method="POST" class="needs-validation" novalidate>
+
+                <label>Rating</label>
+
+                <fieldset class="starability-slot">
+
+                    <!-- default selected -->
+                    <input type="radio" id="rate1" name="review[rating]" value="1" required />
+                    <label for="rate1">1 star</label>
+
+                    <input type="radio" id="rate2" name="review[rating]" value="2" />
+                    <label for="rate2">2 stars</label>
+
+                    <input type="radio" id="rate3" name="review[rating]" value="3" checked />
+                    <label for="rate3">3 stars</label>
+
+                    <input type="radio" id="rate4" name="review[rating]" value="4" />
+                    <label for="rate4">4 stars</label>
+
+                    <input type="radio" id="rate5" name="review[rating]" value="5" />
+                    <label for="rate5">5 stars</label>
+
+                </fieldset>
+
+                <label>Comment</label>
+                <textarea class="form-control" name="review[comment]" required></textarea>
+                <div class="invalid-feedback">Comment is required</div>
+
+                <button class="btn btn-primary mt-2">Submit Review</button>
+            </form>
+        </div>
+
+    <% } else { %>
+
+        <div class="login-prompt">
+            <p>🔒 Please login to add a review</p>
+            <a href="/login" class="btn btn-primary">Login</a>
+        </div>
+
+    <% } %>
+
+
+<!-- 🗺 GOOGLE MAP -->
+<!-- 🗺 GOOGLE MAP -->
+<div class="map-section mt-4">
+    <div class="map-header">
+        <h3>📍 Where you'll be</h3>
+        <p>Explore the location on map</p>
+    </div>
+
+    <div class="map-wrapper">
+        <div id="map"></div>
+    </div>
+</div>
+
+    <a href="/listings" class="btn-back">⬅ Back to Listings</a>
+
+    <script>
+    const coordinates = <%- JSON.stringify(listings.geometry.coordinates) %>;
+    const listingTitle = <%- JSON.stringify(listings.title) %>;
+</script>
+
+<script src="/js/map.js"></script>
+<script async
+    src="https://maps.googleapis.com/maps/api/js?key=<%= mapApiKey %>&callback=initMap">
+</script>
+
+</div>

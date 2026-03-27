@@ -1,0 +1,177 @@
+🔹 1. Middleware in Express
+✅ What is Middleware?
+
+Functions that run between request and response.
+
+(req, res, next) => { }
+🔥 Types of Middleware
+1. Application Middleware
+app.use((req, res, next) => {
+  console.log("Request received");
+  next();
+});
+2. Route Middleware
+app.get("/home", (req, res, next) => {
+  console.log("Home route");
+  next();
+});
+3. Built-in Middleware
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+4. Third-party Middleware
+morgan (logging)
+cors
+cookie-parser
+5. Error Handling Middleware
+app.use((err, req, res, next) => {
+  res.status(500).send(err.message);
+});
+****************************************
+🔹 2. Backend Errors
+Types:
+Syntax Errors
+Runtime Errors
+Logical Errors
+Custom Error Class
+class ExpressError extends Error {
+  constructor(status, message) {
+    super();
+    this.status = status;
+    this.message = message;
+  }
+}
+Async Error Handling
+const wrapAsync = (fn) => {
+  return function(req, res, next) {
+    fn(req, res, next).catch(next);
+  };
+};
+******************************
+🔹 3. Client-side vs Server-side Validation
+🟢 Client-side (Frontend)
+Done in browser
+Fast, better UX
+Not secure
+<input type="email" required />
+🔴 Server-side (Backend)
+Done in server
+Secure & reliable
+if (!req.body.email) {
+  throw new ExpressError(400, "Email required");
+}
+
+👉 Best Practice: Use BOTH
+******************************************
+🔹 4. Database Errors
+Common Errors (MongoDB / Mongoose)
+ValidationError
+CastError (invalid ObjectId)
+Duplicate key error
+Handling Example:
+try {
+  await User.save();
+} catch (err) {
+  if (err.code === 11000) {
+    console.log("Duplicate key error");
+  }
+}
+
+🔹 5. Handling Database Relationships
+Types:
+One-to-One
+One-to-Many
+Many-to-Many
+🟢 Referencing (Best Practice)
+const postSchema = new mongoose.Schema({
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User"
+  }
+});
+Populate
+Post.find().populate("user");
+🔴 Embedding
+const userSchema = new mongoose.Schema({
+  posts: [{ title: String }]
+});
+********************************************
+🔹 6. Express Router
+Why?
+Modular code
+Clean structure
+const express = require("express");
+const router = express.Router();
+
+router.get("/", (req, res) => {
+  res.send("All items");
+});
+
+module.exports = router;
+Use in App
+app.use("/items", router);
+
+🔹 7. Cookies
+What?
+
+Small data stored in browser
+
+res.cookie("name", "harsimran");
+Read Cookies
+req.cookies.name;
+
+
+***************************************
+🔹 8. Sessions
+What?
+
+Store user data on server
+
+const session = require("express-session");
+
+app.use(session({
+  secret: "mysupersecret",
+  resave: false,
+  saveUninitialized: true
+}));
+Use
+req.session.user = "Harsimran";
+🔹 9. Flash Messages
+What?
+
+Temporary messages (one-time)
+
+const flash = require("connect-flash");
+
+app.use(flash());
+req.flash("success", "Logged in!");
+res.locals.success = req.flash("success");
+
+
+🔹 10. Authentication vs Authorization
+🔐 Authentication (WHO are you?)
+Login system
+Password check
+🛑 Authorization (WHAT can you do?)
+Role-based access
+if (!req.user) {
+  return res.redirect("/login");
+}
+if (!req.user.isAdmin) {
+  return res.send("Not allowed");
+}
+🔹 11. Hashing & Salting
+🔐 Hashing
+
+Convert password → fixed string
+
+👉 Use bcrypt
+
+const bcrypt = require("bcrypt");
+
+const hashed = await bcrypt.hash("password", 10);
+🧂 Salting
+Adds randomness
+Prevents rainbow table attacks
+const isMatch = await bcrypt.compare("password", hashed);
+
+******************************************

@@ -1,0 +1,28 @@
+<% layout("/layouts/boilerplate") %>
+
+<div class="error-container">
+
+    <div class="card error-card col-md-5">
+
+        <div class="error-header">
+            <div class="error-code">
+                <%= status || 500 %>
+            </div>
+            <h4>Oops! Something went wrong</h4>
+        </div>
+
+        <div class="card-body text-center">
+
+            <p class="error-message">
+                <%= message || "Unexpected Error Occurred!" %>
+            </p>
+
+            <a href="/listings" class="btn btn-primary error-btn">
+                🔙 Go Back
+            </a>
+
+        </div>
+
+    </div>
+
+</div>

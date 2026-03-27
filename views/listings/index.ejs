@@ -1,0 +1,109 @@
+<% layout("layouts/boilerplate") %>
+
+    <!-- using flash success msg -->
+
+
+    <!-- <form action="/listings/new" method="GET" class="top-bar">
+        <button class="add-btn">+ Add New Listing</button>
+    </form> -->
+
+    <div class="filters-wrapper">
+
+
+        <div class="filters">
+            <div class="filter-item">
+                <i class="fa-solid fa-fire"></i>
+                <span>Trending</span>
+            </div>
+            <div class="filter-item">
+                <i class="fa-solid fa-bed"></i>
+                <span>Rooms</span>
+            </div>
+            <div class="filter-item">
+                <i class="fa-solid fa-city"></i>
+                <span>Iconic Cities</span>
+            </div>
+            <div class="filter-item">
+                <i class="fa-solid fa-mountain"></i>
+                <span>Mountains</span>
+            </div>
+            <div class="filter-item">
+                <i class="fa-solid fa-landmark"></i>
+                <span>Castles</span>
+            </div>
+            <div class="filter-item">
+                <i class="fa-solid fa-water-ladder"></i>
+                <span>Amazing Pools</span>
+            </div>
+            <div class="filter-item">
+                <i class="fa-solid fa-campground"></i>
+                <span>Camps</span>
+            </div>
+            <div class="filter-item">
+                <i class="fa-solid fa-tractor"></i>
+                <span>Farms</span>
+            </div>
+
+        </div>
+
+        <div class="price-toggle">
+            <span>Show total price incl. taxes</span>
+            <label class="switch">
+                <input type="checkbox" id="flexSwitch">
+                <span class="slider"></span>
+            </label>
+        </div>
+
+
+
+    </div>
+    <div class="container">
+        <% for(let listing of allListings){ %>
+            <div class="listing">
+
+                <a href="/listings/<%= listing._id%>" class="card-link">
+                    <img src="<%= listing.image.url %>" alt="listing image">
+
+                    <div class="content">
+                        <h3>
+                            <%= listing.title %>
+                        </h3>
+
+                        <p class="price" data-price="<%= listing.price %>">
+
+
+                        <!-- <p class="location">
+                        📍 <%= listing.location %>, <%= listing.country %>
+                    </p> -->
+                    </div>
+                </a>
+
+            </div>
+            <% } %>
+    </div>
+<script>
+    let taxSwitch = document.getElementById("flexSwitch");
+    let priceElements = document.querySelectorAll(".price");
+
+    function updatePrices() {
+        priceElements.forEach(el => {
+            let originalPrice = parseFloat(el.dataset.price);
+
+            if (taxSwitch.checked) {
+                let newPrice = originalPrice * 1.18;
+
+                el.innerHTML = `₹ ${newPrice.toLocaleString("en-IN", { maximumFractionDigits: 0 })}/night 
+                <br><span class="tax-text">+18% GST</span>`;
+            } else {
+                el.innerHTML = `₹ ${originalPrice.toLocaleString("en-IN")}/night 
+                <br><span class="tax-text" style="display:none;">+18% GST</span>`;
+            }
+        });
+    }
+
+    // ✅ Run once when page loads
+    updatePrices();
+
+    // ✅ Run on toggle
+    taxSwitch.addEventListener("click", updatePrices);
+</script>

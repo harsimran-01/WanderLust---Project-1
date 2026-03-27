@@ -1,0 +1,73 @@
+<% layout("layouts/boilerplate") %>
+
+    <div class="form-container">
+        <h2>Edit Listing ✏️</h2>
+
+        <form method="POST" action="/listings/<%= listings._id %>?_method=PUT" class="needs-validation" novalidate enctype="multipart/form-data">
+
+            <!-- Title -->
+            <label class="form-label">Title</label>
+            <input type="text" class="form-control" name="listing[title]" value="<%= listings.title %>" minlength="3"
+                required>
+            <div class="invalid-feedback">
+                Title must be at least 3 characters
+            </div>
+
+            <!-- Description -->
+            <label class="form-label mt-2">Description</label>
+            <textarea class="form-control" name="listing[description]"><%= listings.description %></textarea>
+
+            <!-- Price -->
+            <label class="form-label mt-2">Price (₹)</label>
+            <input type="number" class="form-control" name="listing[price]" value="<%= listings.price %>" min="1"
+                required>
+            <div class="invalid-feedback">
+                Please enter a valid price (greater than 0)
+            </div>
+
+            <!-- Location -->
+            <div class="mb-3">
+                <label class="form-label">Location</label>
+                <input type="text" class="form-control" name="listing[location]" value="<%= listings.location || '' %>"
+                    required>
+
+                <div class="valid-feedback">Looks good!</div>
+                <div class="invalid-feedback">Location is required</div>
+            </div>
+
+            <!-- Country -->
+            <div class="mb-3">
+                <label class="form-label">Country</label>
+                <input type="text" class="form-control" name="listing[country]" value="<%= listings.country || '' %>"
+                    required>
+
+                <div class="valid-feedback">Looks good!</div>
+                <div class="invalid-feedback">Country is required</div>
+            </div>
+
+            <!-- Image URL -->
+            <div class="mb-3">
+                <label class="form-label">Image URL</label>
+
+                <input type="file" class="form-control" id="imgInput" name="listing[image][url]"
+                    value="<%= listings.image.url || '' %>" placeholder="https://example.com/image.jpg">
+
+                <div class="valid-feedback">
+                    Looks like a valid image URL!
+                </div>
+                <div class="invalid-feedback">
+                    Please enter a valid URL
+                </div>
+            </div>
+
+            <!-- Preview -->
+            <img id="preview" src="<%= listings.image.url %>" class="preview-img mt-3">
+
+            <!-- Button -->
+            <button class="btn btn-success mt-3" type="submit">
+                Update Listing
+            </button>
+        </form>
+
+        <a href="/listings" class="back-btn">⬅ Back to Listings</a>
+    </div>
