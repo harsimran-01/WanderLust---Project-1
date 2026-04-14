@@ -191,7 +191,7 @@ Listings can be removed from the platform.
 
 Example:
 
-```md
+<!-- ```md
 ## 📸 Screenshots
 
 ### Home Page
@@ -204,7 +204,7 @@ Example:
 ![Add Listing](./public/screenshots/add-listing.png)
 ```
 
----
+--- -->
 
 ## ⚙️ Installation & Setup
 
